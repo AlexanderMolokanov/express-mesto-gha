@@ -52,26 +52,38 @@ const getUsers = async (req, res, next) => {
 };
 
 
-const getUserById = (req, res) => {
-  const { userId } = req.params;
-  return User.findById(userId)
-    .orFail(() => new Error("NotFound"))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === "CastError") {
-        res
-          .status(BAD_REQUEST)
-          .send({ message: "Переданы некорректные данные" });
-      } else if (err.message === "NotFound") {
-        res
-          .status(NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
-      } else {
-        res
-          .status(INTERNAL_SERVER_ERROR)
-          .send({ message: "На сервере произошла ошибка" });
-      }
-    });
+// const getUserById = (req, res) => {
+//   const { userId } = req.params;
+//   return User.findById(userId)
+//     .orFail(() => new Error("NotFound"))
+//     .then((user) => res.status(200).send(user))
+//     .catch((err) => {
+//       if (err.name === "CastError") {
+//         res
+//           .status(BAD_REQUEST)
+//           .send({ message: "Переданы некорректные данные" });
+//       } else if (err.message === "NotFound") {
+//         res
+//           .status(NOT_FOUND)
+//           .send({ message: "Пользователь по указанному _id не найден" });
+//       } else {
+//         res
+//           .status(INTERNAL_SERVER_ERROR)
+//           .send({ message: "На сервере произошла ошибка" });
+//       }
+//     });
+// };
+
+
+// module.exports.getUser = const getUserById = (req, res) => { => {
+const getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) res.send(modelToDto(user));
+    else throw new NotFoundError('Пользователь не найден');
+  } catch (err) {
+    next(err);
+  }
 };
 
 // const createUser = (req, res) => {
