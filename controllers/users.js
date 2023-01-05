@@ -9,9 +9,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../errors/errors');
-// const NotFoundError = require('../errors/NotFoundError');
-// const UnauthorizedError = require('../errors/UnauthorizedError');
-// const ConflictError = require('../errors/ConflictError');
+const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -182,36 +182,56 @@ const updateUser = (req, res) => {
 
 
 //Обновляет аватар
-const updateAvatar = (req, res) => {
+// const updateAvatar = (req, res) => {
+//   const { avatar } = req.body;
+//   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+//     .orFail(new ObjectNotFound('Пользователь не найден.'))
+//     .orFail(() => new Error('NotFound'))
+//     .then(user => res.send({ data: user }))
+//     .catch((err) => {
+//       if (errors.name === 'ObjectIdIsNotFound') {
+//         const UserNotFound = new ObjectNotFound('Пользователь не найден.')
+//         return res.status(UserNotFound.status).send({ message: UserNotFound.message })
+
+//       } else if (errors.name === 'ValidationError') {
+//         const IncorrectInputValue = new ValidationError(`Переданы некорректные данные.`)
+//         return res.status(IncorrectInputValue.status).send({ message: IncorrectInputValue.message })
+
+//       } else if (errors.name === 'CastError') {
+//         const UserIdNotValid = new ValidationError(`${req.user._id} не является валидным идентификатором пользователя.`)
+//         return res.status(UserIdNotValid.status).send({ message: UserIdNotValid.message })
+//       } else {
+//         const ServerErr = new ServerError('Произошла ошибка.')
+//         return res.status(ServerErr.status).send({ message: 'Произошла ошибка' });
+//       }
+//       if (err.name === 'ValidationError' || err.name === 'CastError') {
+//         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+//       } else if (err.message === 'NotFound') {
+//         res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
+//       } else {
+//         res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+//       }
+//     })
+// };
+
+
+//Обновляет аватар
+// module.exports.updateMeAvatar = async (req, res, next) => {
+const updateAvatar = async (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .orFail(new ObjectNotFound('Пользователь не найден.'))
-    .orFail(() => new Error('NotFound'))
-    .then(user => res.send({ data: user }))
-    .catch((err) => {
-      if (errors.name === 'ObjectIdIsNotFound') {
-        const UserNotFound = new ObjectNotFound('Пользователь не найден.')
-        return res.status(UserNotFound.status).send({ message: UserNotFound.message })
-
-      } else if (errors.name === 'ValidationError') {
-        const IncorrectInputValue = new ValidationError(`Переданы некорректные данные.`)
-        return res.status(IncorrectInputValue.status).send({ message: IncorrectInputValue.message })
-
-      } else if (errors.name === 'CastError') {
-        const UserIdNotValid = new ValidationError(`${req.user._id} не является валидным идентификатором пользователя.`)
-        return res.status(UserIdNotValid.status).send({ message: UserIdNotValid.message })
-      } else {
-        const ServerErr = new ServerError('Произошла ошибка.')
-        return res.status(ServerErr.status).send({ message: 'Произошла ошибка' });
-      }
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара' });
-      } else if (err.message === 'NotFound') {
-        res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-      }
-    })
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { avatar },
+      { new: true, runValidators: true },
+    );
+    if (user) res.send(modelToDto(user));
+    else throw new NotFoundError('Пользователь не найден');
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
+      next(new ValidationError('Переданы некорректные данные'));
+    } else next(err);
+  }
 };
 
 
