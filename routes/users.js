@@ -26,8 +26,8 @@ router.use(auth);
 router.get('/users', getUsers);
 router.get('/users/me', getUserMe);
 router.patch('/users/me', patchUserMeValidation,  patchUserMe);
-router.get('/users/:userId', getUserById);
+router.get('/users/:userId', userIdValidation, getUserById);
 // router.post('/users', createUser);
-router.patch('/users/me/avatar', updateAvatar);
+router.patch('/users/me/avatar', patchUserAvatarValidation, updateAvatar);
 
 module.exports = router;
