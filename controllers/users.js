@@ -39,14 +39,24 @@ const modelToDto = ( { _doc } ) => {
 //     });
 // };
 
-// module.exports.getUsers = async (req, res, next) => {
+// // module.exports.getUsers = async (req, res, next) => {
+// const getUsers = async (req, res, next) => {
+//   try {
+//     const users = await User.find({});
+//     if (users) {
+//       const dtoUsers = users.map((user) => modelToDto(user));
+//       res.send(dtoUsers);
+//     } else throw new NotFoundError('Пользователей не найдено');
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// exports.getUsers = async (req, res, next) => {
 const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
-    if (users) {
-      const dtoUsers = users.map((user) => modelToDto(user));
-      res.send(dtoUsers);
-    } else throw new NotFoundError('Пользователей не найдено');
+    res.status(200).send(users);
   } catch (err) {
     next(err);
   }
