@@ -10,15 +10,23 @@ const {
   getUserMe,
 } = require('../controllers/users');
 
+
+// const {
+//   signUpValidation,
+//   signInValidation,
+// } = require('./middlewares/validatons');
+
 const {
+  signUpValidation,
+  signInValidation,
   patchUserMeValidation,
   patchUserAvatarValidation,
   userIdValidation,
 } = require('../middlewares/validatons');
 
  // роуты, не требующие авторизации - регистрация и логин
- router.post('/signin', login);
- router.post('/signup', createUser);
+ router.post('/signin', signInValidation, login);
+ router.post('/signup', signUpValidation, createUser);
  // авторизация
 router.use(auth);
 
