@@ -68,8 +68,11 @@ app.post(
 app.use(routes);
 
 app.use((req, res, next) => next(new NotFoundError('Маршрут не найден')));
+// обработчик ошибок celebrate
 app.use(errors());
+ // централизованная обработка ошибок
 app.use((err, req, res, next) => handleError({ res, err, next }));
+
 app.listen(PORT, () => {
   console.log(`порт слушает ${PORT}!`)
 });
