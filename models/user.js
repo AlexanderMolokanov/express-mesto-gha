@@ -7,21 +7,21 @@ const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    // required: true,
     minlength: 2,
     maxlength: 30,
     default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
-    required: true,
+    // required: true,
     minlength: 2,
     maxlength: 30,
     default: 'Исследователь',
   },
   avatar: {
     type: String,
-    required: true,
+    // required: true,
     default: 'https://pictures.s3.yandex.net/resoAurces/jacques-cousteau_1604399756.png',
     validate: [validator.isURL, 'Некорректный url'],
   },
