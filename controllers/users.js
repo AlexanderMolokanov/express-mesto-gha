@@ -7,7 +7,7 @@
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const userSchema = require('../models/user');
 const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../errors/errors');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
@@ -52,14 +52,23 @@ const modelToDto = ( { _doc } ) => {
 //   }
 // };
 
-// exports.getUsers = async (req, res, next) => {
+// // exports.getUsers = async (req, res, next) => {
+// const getUsers = async (req, res, next) => {
+//   try {
+//     const users = await userSchema.find({});
+//     res.status(200).send(users);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// ищем всех пользователей
+// module.exports.getUsers = (req, res, next) => {
 const getUsers = async (req, res, next) => {
-  try {
-    const users = await User.find({});
-    res.status(200).send(users);
-  } catch (err) {
-    next(err);
-  }
+  userSchema
+    .find({})
+    .then((users) => res.send(users))
+    .catch(next);
 };
 
 
@@ -89,7 +98,7 @@ const getUsers = async (req, res, next) => {
 // module.exports.getUser = const getUserById = (req, res) => { => {
 const getUserById = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await userSchema.findById(req.params.id);
     if (user) res.send(modelToDto(user));
     else throw new NotFoundError('Пользователь не найден');
   } catch (err) {
@@ -123,7 +132,7 @@ const createUser = async (req, res, next) => {
   } = req.body;
   try {
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    const user = await userSchema.create({
       name, about, avatar, email, password: hashed,
     });
     const token = jwt.sign(
@@ -181,7 +190,7 @@ const createUser = async (req, res, next) => {
 const patchUserMe = async (req, res, next) => {
   const { name, about } = req.body;
   try {
-    const user = await User.findByIdAndUpdate(
+    const user = await userSchema.findByIdAndUpdate(
       req.user._id,
       { name, about },
       { new: true, runValidators: true },
@@ -263,7 +272,7 @@ const patchUserMe = async (req, res, next) => {
 const updateAvatar = async (req, res, next) => {
   const { avatar } = req.body;
   try {
-    const user = await User.findByIdAndUpdate(
+    const user = await userSchema.findByIdAndUpdate(
       req.user._id,
       { avatar },
       { new: true, runValidators: true },
@@ -284,7 +293,7 @@ const login = async (req, res, next) => {
   // получить данные
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email }).select("+password");
+    const user = await userSchema.findOne({ email }).select("+password");
     if (!user) throw new UnauthorizedError("Неправильный email или пароль");
     else {
       const match = await bcrypt.compare(password, user.password);
@@ -316,7 +325,7 @@ const login = async (req, res, next) => {
 const getUserMe = async (req, res, next) => {
   const ownerId = req.user._id;
   try {
-    const userSpec = await User.findById(ownerId);
+    const userSpec = await userSchema.findById(ownerId);
     if (userSpec) {
       res.status(200).send({ data: userSpec });
     } else {
