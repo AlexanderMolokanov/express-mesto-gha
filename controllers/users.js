@@ -140,7 +140,7 @@ const createUser = async (req, res, next) => {
 };
 
 // //Обновляет профиль
-// const updateUser = (req, res) => {
+// const patchUserMe = (req, res) => {
 //   const { name, about } = req.body;
 //   User.findByIdAndUpdate(
 //     req.user._id,
@@ -168,7 +168,7 @@ const createUser = async (req, res, next) => {
 
 // module.exports.updateMe = async (req, res, next) => {
   //Обновляет профиль
-const updateUser = async (req, res, next) => {
+const patchUserMe = async (req, res, next) => {
   const { name, about } = req.body;
   try {
     const user = await User.findByIdAndUpdate(
@@ -325,7 +325,7 @@ module.exports = {
   getUsers,
   getUserById,
   createUser,
-  updateUser,
+  patchUserMe,
   updateAvatar,
   login,
   getUserMe,
