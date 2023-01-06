@@ -19,7 +19,7 @@ router.use(auth);
 
 // роуты, которым авторизация нужна
 router.get('/users', getUsers);
-router.get('/me', getUserMe);
+router.get('/users/me', getUserMe);
 router.patch('/users/me', updateUser);
 router.get('/users/:userId', getUserById);
 // router.post('/users', createUser);
