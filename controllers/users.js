@@ -10,8 +10,8 @@ const BadRequest = require('../errors/BadRequest'); // 400
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const modelToDto = ( { _doc } ) => {
-  const  { password, __v, ...rest }  =  _doc;
+const modelToDto = ({ _doc }) => {
+  const { password, __v, ...rest } = _doc;
   return { ...rest };
 };
 
@@ -73,7 +73,7 @@ const createUser = async (req, res, next) => {
   }
 };
 
-//обновить профиль
+// обновить профиль
 const patchUserMe = async (req, res, next) => {
   const { name, about } = req.body;
   try {
@@ -91,7 +91,7 @@ const patchUserMe = async (req, res, next) => {
   }
 };
 
-//обновить аватар
+// обновить аватар
 const updateAvatar = async (req, res, next) => {
   const { avatar } = req.body;
   try {
@@ -114,21 +114,21 @@ const login = async (req, res, next) => {
   // получить данные
   const { email, password } = req.body;
   try {
-    const user = await userSchema.findOne({ email }).select("+password");
-    if (!user) throw new UnauthorizedError("Неправильный email или пароль");
+    const user = await userSchema.findOne({ email }).select('+password');
+    if (!user) throw new UnauthorizedError('Неправильный email или пароль');
     else {
       const match = await bcrypt.compare(password, user.password);
-      if (!match) throw new UnauthorizedError("Неправильный email или пароль");
+      if (!match) throw new UnauthorizedError('Неправильный email или пароль');
       else {
         // создать токен
         const token = jwt.sign(
           { _id: user._id },
-          NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
-          { expiresIn: "7d" }
+          NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+          { expiresIn: '7d' },
         );
         // вернуть токен
         res
-          .cookie("jwt", token, {
+          .cookie('jwt', token, {
             maxAge: 3600000 * 24 * 7,
             httpOnly: true,
           })

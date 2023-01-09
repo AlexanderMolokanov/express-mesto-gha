@@ -1,25 +1,25 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "node": true,
-        "es2021": true
+    'env': {
+        'browser': true,
+        'node': true,
+        'es2021': true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
+    'extends': [
+        'eslint:recommended',
+        'plugin:react/recommended'
     ],
-    "overrides": [
+    'overrides': [
     ],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
+    'parserOptions': {
+        'ecmaVersion': 'latest',
+        'sourceType': 'module'
     },
-    "plugins": [
-        "react"
+    'plugins': [
+        'react'
     ],
-    "rules": {
-      "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-      "no-unused-vars": "off"
-
+    'rules': {
+      'no-underscore-dangle': ['error', { 'allow': ['_id'] }],
+    'no-console': 'off',
+    'quotes': [2, 'single', { 'avoidEscape': true, 'allowTemplateLiterals': true }]
     }
 }

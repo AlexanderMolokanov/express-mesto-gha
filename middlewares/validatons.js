@@ -1,6 +1,6 @@
-const { celebrate, Joi } = require("celebrate");
-const validator = require("validator");
-const { ObjectId } = require("mongoose").Types;
+const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
+const { ObjectId } = require('mongoose').Types;
 
 const signUpValidation = celebrate({
   body: Joi.object().keys({
@@ -10,29 +10,29 @@ const signUpValidation = celebrate({
         if (validator.isEmail(value)) {
           return value;
         }
-        return helpers.message("Невалидный email");
+        return helpers.message('Невалидный email');
       })
       .messages({
-        "any.required": 'Поле "email" должно быть заполнено',
+        'any.required': 'Поле "email" должно быть заполнено',
       }),
     password: Joi.string().required().messages({
-      "string.min": 'Минимальная длина поля "password" - 2',
-      "string.max": 'Максимальная длина поля "password" - 30',
-      "any.required": 'Поле "password" должно быть заполнено',
+      'string.min': 'Минимальная длина поля "password" - 2',
+      'string.max': 'Максимальная длина поля "password" - 30',
+      'any.required': 'Поле "password" должно быть заполнено',
     }),
     name: Joi.string().min(2).max(30).messages({
-      "string.min": 'Минимальная длина поля "name" - 2',
-      "string.max": 'Максимальная длина поля "name" - 30',
+      'string.min': 'Минимальная длина поля "name" - 2',
+      'string.max': 'Максимальная длина поля "name" - 30',
     }),
     about: Joi.string().min(2).max(30).messages({
-      "string.min": 'Минимальная длина поля "about" - 2',
-      "string.max": 'Максимальная длина поля "about" - 30',
+      'string.min': 'Минимальная длина поля "about" - 2',
+      'string.max': 'Максимальная длина поля "about" - 30',
     }),
     avatar: Joi.string().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message("Невалидная ссылка");
+      return helpers.message('Невалидная ссылка');
     }),
   }),
 });
@@ -46,16 +46,18 @@ const signInValidation = celebrate({
 
 const patchUserMeValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30).messages({
-      "string.min": 'Минимальная длина поля "name" - 2',
-      "string.max": 'Максимальная длина поля "name" - 30',
-      "any.required": 'Поле "password" должно быть заполнено',
-    }),
-    about: Joi.string().required().min(2).max(30).messages({
-      "string.min": 'Минимальная длина поля "about" - 2',
-      "string.max": 'Максимальная длина поля "about" - 30',
-      "any.required": 'Поле "password" должно быть заполнено',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'any.required': 'Поле "password" должно быть заполнено',
+      }),
+    about: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля "about" - 2',
+        'string.max': 'Максимальная длина поля "about" - 30',
+        'any.required': 'Поле "password" должно быть заполнено',
+      }),
   }),
 });
 
@@ -67,7 +69,7 @@ const patchUserAvatarValidation = celebrate({
         if (validator.isURL(value)) {
           return value;
         }
-        return helpers.message("Невалидная ссылка");
+        return helpers.message('Невалидная ссылка');
       }),
   }),
 });
@@ -80,34 +82,36 @@ const validateCardId = celebrate({
         if (ObjectId.isValid(value)) {
           return value;
         }
-        return helpers.message("Невалидный id");
+        return helpers.message('Невалидный id');
       }),
   }),
 });
 
 const createCardValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30).messages({
-      "string.min": 'Минимальная длина поля "name" - 2',
-      "string.max": 'Максимальная длина поля "name" - 30',
-      "any.required": 'Поле "password" должно быть заполнено',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'any.required': 'Поле "password" должно быть заполнено',
+      }),
     link: Joi.string()
       .required()
       .custom((value, helpers) => {
         if (validator.isURL(value)) {
           return value;
         }
-        return helpers.message("Невалидная ссылка");
+        return helpers.message('Невалидная ссылка');
       }),
   }),
 });
 
 const userIdValidation = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required().messages({
-      "any.required": 'Поле "id" должно быть заполнено',
-    }),
+    userId: Joi.string().length(24).hex().required()
+      .messages({
+        'any.required': 'Поле "id" должно быть заполнено',
+      }),
   }),
 });
 
