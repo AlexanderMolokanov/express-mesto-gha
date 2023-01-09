@@ -2,9 +2,7 @@ const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const ValidationError = require('../errors/ValidationError');
-// const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../utils/errors');
 
-// module.exports.getCards = async (req, res, next) => {
 const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
@@ -14,7 +12,6 @@ const getCards = async (req, res, next) => {
   }
 };
 
-// module.exports.createCard = async (req, res, next) => {
 const createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
@@ -29,7 +26,6 @@ const createCard = async (req, res, next) => {
   }
 };
 
-// module.exports.deleteCard = async (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.cardId);
@@ -46,7 +42,6 @@ const deleteCard = async (req, res, next) => {
   }
 };
 
-// module.exports.putLike = async (req, res, next) => {
 const likeCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.cardId);
@@ -66,7 +61,6 @@ const likeCard = async (req, res, next) => {
   }
 };
 
-// module.exports.deleteLike = async (req, res, next) => {
   const dislikeCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.cardId);

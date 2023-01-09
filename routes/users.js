@@ -10,12 +10,6 @@ const {
   getUserMe,
 } = require('../controllers/users');
 
-
-// const {
-//   signUpValidation,
-//   signInValidation,
-// } = require('./middlewares/validatons');
-
 const {
   signUpValidation,
   signInValidation,
@@ -35,7 +29,6 @@ router.get('/users', getUsers);
 router.get('/users/me', getUserMe);
 router.patch('/users/me', patchUserMeValidation,  patchUserMe);
 router.get('/users/:userId', userIdValidation, getUserById);
-// router.post('/users', createUser);
 router.patch('/users/me/avatar', patchUserAvatarValidation, updateAvatar);
 
 module.exports = router;
