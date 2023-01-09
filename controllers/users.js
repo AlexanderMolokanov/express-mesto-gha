@@ -8,12 +8,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userSchema = require('../models/user');
-const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../errors/errors');
+// const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../errors/errors');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const WrongDataError = require('../errors/wrong-data-err');
+const BadRequest = require('../errors/BadRequest'); // 400
+
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -96,14 +98,33 @@ const getUsers = async (req, res, next) => {
 
 
 // module.exports.getUser = const getUserById = (req, res) => { => {
-const getUserById = async (req, res, next) => {
-  try {
-    const user = await userSchema.findById(req.params.id);
-    if (user) res.send(modelToDto(user));
-    else throw new NotFoundError('Пользователь не найден');
-  } catch (err) {
-    next(err);
-  }
+// const getUserById = async (req, res, next) => {
+//   try {
+//     const user = await userSchema.findById(req.params.id);
+//     if (user) res.send(modelToDto(user));
+//     else throw new NotFoundError('Пользователь не найден');
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// module.exports.getUserById = (req, res, next) => {
+const getUserById = (req, res, next) => {
+  const { userId } = req.params;
+  userSchema.findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      }
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequest('Передан некорретный Id'));
+        return;
+      }
+      next(err);
+    });
 };
 
 // const createUser = (req, res) => {
