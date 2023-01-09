@@ -4,20 +4,14 @@ module.exports = {
         'node': true,
         'es2021': true
     },
-    'extends': [
-        'eslint:recommended',
-        'plugin:react/recommended'
-    ],
-    'overrides': [
-    ],
+
+    
     'parserOptions': {
         'ecmaVersion': 'latest',
         'sourceType': 'module'
     },
-    'plugins': [
-        'react'
-    ],
-    'rules': {
+
+        'rules': {
       'no-underscore-dangle': ['error', { 'allow': ['_id'] }],
     'no-console': 'off',
     'quotes': [2, 'single', { 'avoidEscape': true, 'allowTemplateLiterals': true }]
