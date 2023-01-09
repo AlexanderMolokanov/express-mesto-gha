@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 
     const payload = jwt.verify(token, secret);
 
-        if (!payload) throw new UnauthorizedError('Необходима авторизация');
+    if (!payload) throw new UnauthorizedError('Необходима авторизация');
 
     req.user = payload;
 

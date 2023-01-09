@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const auth = require('../middlewares/auth');
 const {
   getCards,
   createCard,
@@ -11,6 +12,9 @@ const {
   validateCardId,
   createCardValidation,
 } = require('../middlewares/validatons');
+
+// авторизация
+router.use(auth);
 
 router.get('/cards', getCards);
 router.post('/cards', createCardValidation, createCard);

@@ -4,8 +4,9 @@ const userSchema = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const ConflictError = require('../errors/ConflictError');
-const ValidationError = require('../errors/ValidationError');
-const WrongDataError = require('../errors/wrong-data-err');
+// const ValidationError = require('../errors/ValidationError');
+
+// const WrongDataError = require('../errors/wrong-data-err');
 const BadRequest = require('../errors/BadRequest'); // 400
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -67,8 +68,8 @@ const createUser = async (req, res, next) => {
     if (err.code === 11000) {
       next(new ConflictError('Пользователь с таким email уже существует'));
     }
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      next(new ValidationError('Переданы некорректные данные'));
+    if (err.name === 'BadRequest' || err.name === 'CastError') {
+      next(new BadRequest('Переданы некорректные данные'));
     } else next(err);
   }
 };
@@ -85,8 +86,8 @@ const patchUserMe = async (req, res, next) => {
     if (user) res.send(modelToDto(user));
     else throw new NotFoundError('Пользователь не найден');
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      next(new ValidationError('Переданы некорректные данные'));
+    if (err.name === 'BadRequest' || err.name === 'CastError') {
+      next(new BadRequest('Переданы некорректные данные'));
     } else next(err);
   }
 };
@@ -103,8 +104,8 @@ const updateAvatar = async (req, res, next) => {
     if (user) res.send(modelToDto(user));
     else throw new NotFoundError('Пользователь не найден');
   } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      next(new ValidationError('Переданы некорректные данные'));
+    if (err.name === 'BadRequest' || err.name === 'CastError') {
+      next(new BadRequest('Переданы некорректные данные'));
     } else next(err);
   }
 };
@@ -152,7 +153,7 @@ const getUserMe = async (req, res, next) => {
     }
   } catch (err) {
     if (err.name === 'CastError') {
-      next(new WrongDataError(`Невалидный id ${ownerId}`));
+      next(new BadRequest(`Невалидный id ${ownerId}`));
     } else {
       next(err);
     }
